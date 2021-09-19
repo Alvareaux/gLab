@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Base
+
 # External
 import numpy as np
 from matplotlib import pyplot as plt
@@ -83,9 +88,6 @@ class Figure:
 
     # -----------------------------------------------------------------------------------------------------------------
     # Circle
-
-    # -----------------------------------------------------------------------------------------------------------------
-    # Circle
     def __centre_circle(self):
         circle = self.builder.build_circle(r=self.Circle.radius,
                                            xy=self.center, stroke=self.st_color, stroke_width=self.st_width)
@@ -167,6 +169,7 @@ class Figure:
         ])
 
         return self.d_width + self.Circle.radius / 2, y
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 
