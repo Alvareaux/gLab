@@ -1,4 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Base
+
+# External
 import gizeh
+
+# Internal
+from lab1.module.storage import Point, Line, points2line, line2points
 
 
 class Builder:
@@ -18,7 +27,7 @@ class Builder:
                               stroke=stroke, stroke_width=stroke_width)
         line.draw(self.surface)
 
-        self.figures.append(line)
+        self.__add_figure(line)
 
     def build_circle(self, r, xy, stroke=None, stroke_width=None):
         stroke, stroke_width = self.__handle_stroke(stroke, stroke_width)
@@ -27,7 +36,7 @@ class Builder:
                               stroke=stroke, stroke_width=stroke_width)
         circle.draw(self.surface)
 
-        self.figures.append(circle)
+        self.__add_figure(circle)
 
     def build_arc(self, r, a1, a2, xy, stroke=None, stroke_width=None):
         stroke, stroke_width = self.__handle_stroke(stroke, stroke_width)
@@ -36,10 +45,21 @@ class Builder:
                         stroke=stroke, stroke_width=stroke_width)
         arc.draw(self.surface)
 
-        self.figures.append(arc)
+        self.__add_figure(arc)
 
     def get_image(self):
         return self.surface.get_npimage()
+
+    def __add_figure(self, figure):
+        print(type(figure))
+        if type(figure) is Line:
+            self.figures.append(figure)
+        elif type(figure) is list:
+            self.figures.extend(figure)
+        elif type(figure) is gizeh.Element:
+            self.figures.append(figure)  # TODO raise a warning when custom draw methods are implemented
+        else:
+            raise ValueError
 
     def __build_surface(self, surf_width, surf_height, bg_color):
         self.surface = gizeh.Surface(width=surf_width, height=surf_height, bg_color=bg_color)
