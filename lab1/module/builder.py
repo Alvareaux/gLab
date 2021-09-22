@@ -42,13 +42,13 @@ class Builder:
         self.__add_figure(arc)
 
     def get_image(self):
-        import numpy as np
-        pi = np.pi
-
         group = gizeh.Group(self.figures)
         group.draw(self.surface)
 
         return self.surface.get_npimage()
+
+    def interception_check(self):
+        raise NotImplementedError
 
     def __add_figure(self, figure):
         if type(figure) is Line:

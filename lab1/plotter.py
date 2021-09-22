@@ -14,7 +14,7 @@ from lab1.figures.circle import Circle
 from lab1.figures.arc import Arc
 from lab1.figures.square import Square
 from lab1.figures.perimeter import Perimeter
-
+from lab1.figures.auxiliary import Auxiliary
 
 class Plotter:
     builder = None
@@ -23,6 +23,7 @@ class Plotter:
     arc = None
     square = None
     perimeter = None
+    auxiliary = None
 
     scale = 1
 
@@ -36,7 +37,7 @@ class Plotter:
 
     bg_color = (255, 255, 255)  # White
     st_color = (0, 0, 0)  # Black
-    st_width = 2
+    st_width = 3
 
     center = (d_width, d_height)
 
@@ -57,6 +58,11 @@ class Plotter:
                                    d_width=self.d_width, d_height=self.d_height,
                                    circle=self.circle, arc=self.arc, square=self.square, scale=self.scale)
 
+        self.auxiliary = Auxiliary(builder=self.builder, center=self.center,
+                                   d_width=self.d_width, d_height=self.d_height,
+                                   circle=self.circle, arc=self.arc, square=self.square, scale=self.scale,
+                                   perimeter=self.perimeter)
+
     def build(self):
         self.__complex_check()
         figure = self.__build_figures()
@@ -67,6 +73,8 @@ class Plotter:
         self.arc.build()
         self.square.build()
         self.perimeter.build()
+
+        self.auxiliary.build()
 
         return self.builder.get_image()
 
@@ -90,6 +98,8 @@ class Plotter:
 
 if __name__ == '__main__':
     fig = Plotter()
+    fig.scale = 1.5
     fig.setup_builder()
     fig.setup_figures()
+
     fig.build()
