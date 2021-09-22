@@ -51,7 +51,6 @@ class Builder:
         return self.surface.get_npimage()
 
     def __add_figure(self, figure):
-        print(type(figure))
         if type(figure) is Line:
             self.figures.append(figure)
         elif type(figure) is list:
