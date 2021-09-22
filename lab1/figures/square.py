@@ -15,10 +15,10 @@ pi = np.pi
 class Square(Figure):
     scale = 1
 
-    x_offset = 80  # x_offset > Circle.radius
-    y_offset = 80 + 50
+    x_offset = 70  # x_offset > Circle.radius
+    y_offset = 70 + 50
 
-    side = 50
+    side = 60
 
     def __init__(self, builder, center, d_width, d_height, scale=1):
         self.__builder = builder

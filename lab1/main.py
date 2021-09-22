@@ -43,13 +43,10 @@ class Plotter:
     def __init__(self):
         pass
 
-    def build(self):
-        figure = self.build_figures()
-        self.show_figure(figure)
-
-    def build_figures(self):
+    def setup_builder(self):
         self.builder = Builder(self.surf_width, self.surf_height, self.bg_color, self.st_color, self.st_width)
 
+    def setup_figures(self):
         self.circle = Circle(builder=self.builder, center=self.center,
                              d_width=self.d_width, d_height=self.d_height, scale=self.scale)
         self.arc = Arc(builder=self.builder, center=self.center,
@@ -59,6 +56,13 @@ class Plotter:
         self.perimeter = Perimeter(builder=self.builder, center=self.center,
                                    d_width=self.d_width, d_height=self.d_height,
                                    circle=self.circle, arc=self.arc, square=self.square, scale=self.scale)
+
+    def build(self):
+        self.__complex_check()
+        figure = self.__build_figures()
+        self.__show_figure(figure)
+
+    def __build_figures(self):
         self.circle.build()
         self.arc.build()
         self.square.build()
@@ -66,7 +70,11 @@ class Plotter:
 
         return self.builder.get_image()
 
-    def show_figure(self, data):
+    def __complex_check(self):
+        if self.arc.radius <= self.circle.radius:
+            raise ValueError(f'Arc.radius <= Circle.radius: {self.arc.radius} <= {self.circle.radius}')
+
+    def __show_figure(self, data):
         # Basic fig
         fig, ax = plt.subplots(figsize=(8, 8))
         ax.grid()
@@ -82,5 +90,6 @@ class Plotter:
 
 if __name__ == '__main__':
     fig = Plotter()
-    fig.scale = 1
+    fig.setup_builder()
+    fig.setup_figures()
     fig.build()

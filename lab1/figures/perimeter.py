@@ -20,8 +20,9 @@ class Perimeter(Figure):
         angle_end = 3 / 2 * pi
         delta_radius = 30
 
-    class Arc:
-        pass
+    class LowerArc:
+        angle_start = 1 / 2 * pi
+        angle_end = 10 / 8 * pi
 
     class LowerLine:
         delta = 20
@@ -87,11 +88,17 @@ class Perimeter(Figure):
         lower_endpoint = self.__arc_line_lower()
         upper_endpoint = self.__arc_line_upper()
 
-        right_endpoint = self.__line_lower(lower_endpoint)
+        left_endpoint, right_endpoint = self.__line_lower(lower_endpoint)
         upper_right_endpoint = self.__line_right(right_endpoint)
         upper_left_endpoint = self.__upper_line(upper_right_endpoint)
 
         self.__angle_line(upper_endpoint, upper_left_endpoint)
+
+        r, center = self.__lower_arc(lower_endpoint, left_endpoint)
+        # lower in upper arc, left in lower line
+        # so lower_endpoint = upper_endpoint
+        # and left_endpoint = lower_endpoint
+        self.__lower_arc_line(r, center, lower_endpoint)
 
     def __upper_arc(self):
         self.__builder.build_arc(r=self.__circle.s_radius() + self.s_ua_delta_radius(),
@@ -121,15 +128,17 @@ class Perimeter(Figure):
         return endpoint
 
     def __line_lower(self, lower_endpoint):
-        endpoint = (self.__d_width + self.__square.s_x_offset() + self.__square.s_side() + self.s_rl_delta(),
-                    self.__d_height + self.__arc.s_radius() + self.__arc.s_delta_radius() + self.s_ll_delta())
+        left_endpoint = (lower_endpoint[0],
+                         self.__d_height + self.__arc.s_radius() + self.__arc.s_delta_radius() + self.s_ll_delta())
+        right_endpoint = (self.__d_width + self.__square.s_x_offset() + self.__square.s_side() + self.s_rl_delta(),
+                          self.__d_height + self.__arc.s_radius() + self.__arc.s_delta_radius() + self.s_ll_delta())
+
         self.__builder.build_line(points=[
-            (lower_endpoint[0],
-             self.__d_height + self.__arc.s_radius() + self.__arc.s_delta_radius() + self.s_ll_delta()),
-            endpoint
+            left_endpoint,
+            right_endpoint
         ])
 
-        return endpoint
+        return left_endpoint, right_endpoint
 
     def __line_right(self, right_endpoint):
         endpoint = (right_endpoint[0],
@@ -156,3 +165,22 @@ class Perimeter(Figure):
             upper_endpoint,
             upper_right_endpoint
         ])
+
+    def __lower_arc(self, upper_endpoint, lower_endpoint):
+        r = (lower_endpoint[1] - upper_endpoint[1]) / 3
+        center = (lower_endpoint[0], lower_endpoint[1] - r)
+
+        self.__builder.build_arc(r=r, xy=center,
+                                 a1=self.LowerArc.angle_start, a2=self.LowerArc.angle_end)
+
+        return r, center
+
+    def __lower_arc_line(self, r, center, upper_endpoint):
+        line_left_lower_x = r * np.cos(self.LowerArc.angle_end) + center[0]
+        line_left_lower_y = r * np.sin(self.LowerArc.angle_end) + center[1]
+
+        self.__builder.build_line(points=[
+            upper_endpoint,
+            (line_left_lower_x, line_left_lower_y)
+        ])
+

@@ -19,7 +19,7 @@ class Arc(Figure):
     delta_radius = 30
 
     angle_start = 1 / 8 * pi
-    angle_end = 3 / 4 * pi
+    angle_end = 11 / 16 * pi
 
     def __init__(self, builder, center, d_width, d_height, scale=1):
         self.__builder = builder
