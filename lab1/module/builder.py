@@ -25,8 +25,6 @@ class Builder:
 
         line = gizeh.polyline(points=points,
                               stroke=stroke, stroke_width=stroke_width)
-        line.draw(self.surface)
-
         self.__add_figure(line)
 
     def build_circle(self, r, xy, stroke=None, stroke_width=None):
@@ -34,8 +32,6 @@ class Builder:
 
         circle = gizeh.circle(r=r, xy=xy,
                               stroke=stroke, stroke_width=stroke_width)
-        circle.draw(self.surface)
-
         self.__add_figure(circle)
 
     def build_arc(self, r, a1, a2, xy, stroke=None, stroke_width=None):
@@ -43,11 +39,15 @@ class Builder:
 
         arc = gizeh.arc(r=r, a1=a1, a2=a2, xy=xy,
                         stroke=stroke, stroke_width=stroke_width)
-        arc.draw(self.surface)
-
         self.__add_figure(arc)
 
     def get_image(self):
+        import numpy as np
+        pi = np.pi
+
+        group = gizeh.Group(self.figures)
+        group.draw(self.surface)
+
         return self.surface.get_npimage()
 
     def __add_figure(self, figure):
