@@ -14,7 +14,10 @@ from lab1.figures.circle import Circle
 from lab1.figures.arc import Arc
 from lab1.figures.square import Square
 from lab1.figures.perimeter import Perimeter
+
 from lab1.figures.auxiliary import Auxiliary
+from lab1.figures.grid import Grid
+
 
 class Plotter:
     builder = None
@@ -23,21 +26,23 @@ class Plotter:
     arc = None
     square = None
     perimeter = None
+
     auxiliary = None
+    grid = None
 
     scale = 1
 
-    surf_width = 800
-    surf_height = 800
+    surf_width = 1000
+    surf_height = 1000
 
     d = 25
 
     d_width = int(surf_width / 2)
     d_height = int(surf_height / 2)
 
-    bg_color = (255, 255, 255)  # White
+    bg_color = (1, 1, 1)  # White
     st_color = (0, 0, 0)  # Black
-    st_width = 3
+    st_width = 4
 
     center = (d_width, d_height)
 
@@ -48,6 +53,9 @@ class Plotter:
         self.builder = Builder(self.surf_width, self.surf_height, self.bg_color, self.st_color, self.st_width)
 
     def setup_figures(self):
+        self.grid = Grid(builder=self.builder,
+                         d=self.d, surf_width=self.surf_width, surf_height=self.surf_height)
+
         self.circle = Circle(builder=self.builder, center=self.center,
                              d_width=self.d_width, d_height=self.d_height, scale=self.scale)
         self.arc = Arc(builder=self.builder, center=self.center,
@@ -69,12 +77,14 @@ class Plotter:
         self.__show_figure(figure)
 
     def __build_figures(self):
+        self.grid.build()
+
         self.circle.build()
         self.arc.build()
         self.square.build()
         self.perimeter.build()
 
-        self.auxiliary.build()
+        #self.auxiliary.build()
 
         return self.builder.get_image()
 
@@ -85,11 +95,13 @@ class Plotter:
     def __show_figure(self, data):
         # Basic fig
         fig, ax = plt.subplots(figsize=(8, 8))
-        ax.grid()
+        #  ax.grid()
 
         # X and Y axis tick
-        plt.xticks(np.arange(-self.d_width, self.d_width, self.d), rotation=90)
-        plt.yticks(np.arange(-self.d_height, self.d_height, self.d))
+        #  plt.xticks(np.arange(-self.d_width, self.d_width, self.d), rotation=90)
+        #  plt.yticks(np.arange(-self.d_height, self.d_height, self.d))
+        ax.axes.get_xaxis().set_visible(False)
+        ax.axes.get_yaxis().set_visible(False)
 
         # Image display and axis transformation from (0, width/height) to (-d_width/d_height, d_width/-d_height)
         ax.imshow(data, interpolation='nearest', extent=(-self.d_width, self.d_width, self.d_height, -self.d_height))
@@ -98,7 +110,7 @@ class Plotter:
 
 if __name__ == '__main__':
     fig = Plotter()
-    fig.scale = 1.5
+    fig.scale = 2
     fig.setup_builder()
     fig.setup_figures()
 

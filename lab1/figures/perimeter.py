@@ -16,13 +16,13 @@ class Perimeter(Figure):
     scale = 1
 
     class UpperArc:
-        angle_start = 1 / 1 * pi
-        angle_end = 3 / 2 * pi
+        angle_start = 1 / 2
+        angle_end = 1
         delta_radius = 30
 
     class LowerArc:
-        angle_start = 1 / 2 * pi
-        angle_end = 10 / 8 * pi
+        angle_start = 13 / 16
+        angle_end = 3 / 2
 
     class LowerLine:
         delta = 20
@@ -161,10 +161,10 @@ class Perimeter(Figure):
         return endpoint
 
     def __angle_line(self, upper_endpoint, upper_right_endpoint):
-        self.__builder.build_line(points=[
-            upper_endpoint,
-            upper_right_endpoint
-        ])
+            self.__builder.build_line(points=[
+                upper_endpoint,
+                upper_right_endpoint
+            ])
 
     def __lower_arc(self, upper_endpoint, lower_endpoint):
         r = (lower_endpoint[1] - upper_endpoint[1]) / 3
@@ -176,11 +176,11 @@ class Perimeter(Figure):
         return r, center
 
     def __lower_arc_line(self, r, center, upper_endpoint):
-        line_left_lower_x = r * np.cos(self.LowerArc.angle_end) + center[0]
-        line_left_lower_y = r * np.sin(self.LowerArc.angle_end) + center[1]
+            line_left_lower_x = r * np.cos(self.__builder.pi(self.LowerArc.angle_start)) + center[0]
+            line_left_lower_y = r * np.sin(self.__builder.pi(self.LowerArc.angle_start)) + center[1]
 
-        self.__builder.build_line(points=[
-            upper_endpoint,
-            (line_left_lower_x, line_left_lower_y)
-        ])
+            self.__builder.build_line(points=[
+                upper_endpoint,
+                (line_left_lower_x, line_left_lower_y)
+            ])
 

@@ -18,8 +18,8 @@ class Arc(Figure):
     radius = 70  # radius > Circle.radius
     delta_radius = 30
 
-    angle_start = 1 / 8 * pi
-    angle_end = 11 / 16 * pi
+    angle_start = 21 / 16
+    angle_end = 15 / 8
 
     def __init__(self, builder, center, d_width, d_height, scale=1):
         self.__builder = builder
@@ -63,13 +63,13 @@ class Arc(Figure):
                                  xy=self.__center)
 
     def __left_line(self):
-        line_left_upper_x = self.s_radius() * np.cos(self.angle_start) + self.__d_width
-        line_left_upper_y = self.s_radius() * np.sin(self.angle_start) + self.__d_height
+        line_left_upper_x = self.s_radius() * np.cos(self.__builder.pi(self.angle_start)) + self.__d_width
+        line_left_upper_y = self.s_radius() * np.sin(self.__builder.pi(self.angle_start)) + self.__d_height
 
         line_left_lower_x = (self.s_radius() + self.s_delta_radius()) * \
-                            np.cos(self.angle_start) + self.__d_width
+                            np.cos(self.__builder.pi(self.angle_start)) + self.__d_width
         line_left_lower_y = (self.s_radius() + self.s_delta_radius()) * \
-                            np.sin(self.angle_start) + self.__d_height
+                            np.sin(self.__builder.pi(self.angle_start)) + self.__d_height
 
         self.__builder.build_line(points=[
             (line_left_upper_x, line_left_upper_y),
@@ -77,13 +77,13 @@ class Arc(Figure):
         ])
 
     def __right_line(self):
-        line_right_upper_x = self.s_radius() * np.cos(self.angle_end) + self.__d_width
-        line_right_upper_y = self.s_radius() * np.sin(self.angle_end) + self.__d_height
+        line_right_upper_x = self.s_radius() * np.cos(self.__builder.pi(self.angle_end)) + self.__d_width
+        line_right_upper_y = self.s_radius() * np.sin(self.__builder.pi(self.angle_end)) + self.__d_height
 
         line_right_lower_x = (self.s_radius() + self.s_delta_radius()) * \
-                             np.cos(self.angle_end) + self.__d_width
+                             np.cos(self.__builder.pi(self.angle_end)) + self.__d_width
         line_right_lower_y = (self.s_radius() + self.s_delta_radius()) * \
-                             np.sin(self.angle_end) + self.__d_height
+                             np.sin(self.__builder.pi(self.angle_end)) + self.__d_height
 
         self.__builder.build_line(points=[
             (line_right_upper_x, line_right_upper_y),
