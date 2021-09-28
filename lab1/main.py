@@ -20,11 +20,15 @@ def handle_value_error(f):
     try:
         f()
     except ValueError as e:
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
-        msg.setText(str(e))
-        msg.setWindowTitle("Error")
-        msg.exec_()
+        error_window(e)
+
+
+def error_window(e):
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Critical)
+    msg.setText(str(e))
+    msg.setWindowTitle("Error")
+    msg.exec_()
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -157,30 +161,39 @@ class Window(QMainWindow, Ui_MainWindow):
             self.transform_projective()
 
     def transform_base(self):
-        handle_value_error(self.plotter.build_pre)
-        self.plotter.builder.prepare_image()
+        try:
+            self.plotter.build_pre()
+            self.plotter.builder.prepare_image()
 
-        self.plotter.builder.shift_rotate(ox=self.shift_x.value(), oy=-self.shift_y.value(),
-                                          cx=self.rot_x.value() + self.plotter.d_width,
-                                          cy=self.rot_y.value() + self.plotter.d_height, a=self.rot_angle.value())
+            self.plotter.builder.shift_rotate(ox=self.shift_x.value(), oy=-self.shift_y.value(),
+                                              cx=self.rot_x.value() + self.plotter.d_width,
+                                              cy=self.rot_y.value() + self.plotter.d_height, a=self.rot_angle.value())
 
-        self.plotter.builder.get_image()
-        self.update_image()
+            self.plotter.builder.get_image()
+            self.update_image()
+        except ValueError as e:
+            error_window(e)
 
     def transform_affine(self):
-        handle_value_error(self.plotter.build_pre)
-        self.plotter.builder.affine(xx=self.rX_x.value(), xy=self.rX_y.value(), wx=self.r0_x.value(),
-                                    yx=self.rY_x.value(), yy=self.rY_y.value(), wy=self.r0_y.value())
-        self.plotter.build_after()
-        self.update_image()
+        try:
+            self.plotter.build_pre()
+            self.plotter.builder.affine(xx=self.rX_x.value(), xy=self.rX_y.value(), wx=self.r0_x.value(),
+                                        yx=self.rY_x.value(), yy=self.rY_y.value(), wy=self.r0_y.value())
+            self.plotter.build_after()
+            self.update_image()
+        except ValueError as e:
+            error_window(e)
 
     def transform_projective(self):
-        handle_value_error(self.plotter.build_pre)
-        self.plotter.builder.projective(x0=self.pr0_x.value(), y0=self.pr0_y.value(), w0=self.pr0_w.value(),
-                                        xx=self.prX_x.value(), xy=self.prX_y.value(), wx=self.prX_w.value(),
-                                        yx=self.prY_x.value(), yy=self.prY_y.value(), wy=self.prY_w.value())
-        self.plotter.build_after()
-        self.update_image()
+        try:
+            self.plotter.build_pre()
+            self.plotter.builder.projective(x0=self.pr0_x.value(), y0=self.pr0_y.value(), w0=self.pr0_w.value(),
+                                            xx=self.prX_x.value(), xy=self.prX_y.value(), wx=self.prX_w.value(),
+                                            yx=self.prY_x.value(), yy=self.prY_y.value(), wy=self.prY_w.value())
+            self.plotter.build_after()
+            self.update_image()
+        except ValueError as e:
+            error_window(e)
 
 
 def except_hook(exc_type, exc_value, exc_tb):
