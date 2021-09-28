@@ -40,6 +40,9 @@ class Arc(Figure):
         if self.delta_radius <= 0:
             raise ValueError(f'Arc.delta_radius <= 0: {self.delta_radius}')
 
+        if self.angle_start >= self.angle_end:
+            raise ValueError(f'Arc.angle_start >= Arc.angle_end: {self.angle_start} >= {self.angle_end}')
+
     def __big_arc(self):
         self.__inside_arc()
         self.__outside_arc()

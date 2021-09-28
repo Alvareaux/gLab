@@ -15,7 +15,7 @@ pi = np.pi
 class Circle(Figure):
     scale = 1
 
-    radius = scale * 40
+    radius = 40
 
     def __init__(self, builder, center, d_width, d_height, scale=1):
         self.__builder = builder

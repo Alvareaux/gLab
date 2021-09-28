@@ -48,6 +48,13 @@ class Perimeter(Figure):
         self.__d_width = d_width
         self.__d_height = d_height
 
+    def default(self):
+        self.UpperArc.delta_radius = 30
+        self.LowerLine.delta = 20
+        self.RightLine.delta = 20
+        self.UpperLine.delta = 20
+        self.UpperLine.square_delta = 10
+
     def build(self):
         self.check()
         self.__perimeter()
