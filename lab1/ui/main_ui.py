@@ -414,7 +414,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "gLab"))
         self.shift.setTitle(_translate("MainWindow", "Shift"))
         self.label_sc.setText(_translate("MainWindow", "Offset"))
         self.label_sx.setText(_translate("MainWindow", "x"))
