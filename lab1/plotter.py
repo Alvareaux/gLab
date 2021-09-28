@@ -18,6 +18,8 @@ from lab1.figures.perimeter import Perimeter
 from lab1.figures.auxiliary import Auxiliary
 from lab1.figures.grid import Grid
 
+from lab1.figures.text import Text
+
 
 class Plotter:
     builder = None
@@ -30,10 +32,14 @@ class Plotter:
     auxiliary = None
     grid = None
 
+    text = None
+
+    if_auxiliary = False
+
     scale = 1
 
-    surf_width = 1000
-    surf_height = 1000
+    surf_width = 700
+    surf_height = 700
 
     d = 25
 
@@ -47,15 +53,59 @@ class Plotter:
     center = (d_width, d_height)
 
     def __init__(self):
-        pass
-
-    def setup_builder(self):
         self.builder = Builder(self.surf_width, self.surf_height, self.bg_color, self.st_color, self.st_width)
 
-    def setup_figures(self):
+        self.set_default()
+
+    def __build_figures(self):
+        self.grid.build()
+
+        self.circle.build()
+        self.arc.build()
+        self.square.build()
+        self.perimeter.build()
+
+        if self.if_auxiliary:
+            self.auxiliary.build()
+            self.text.build_aux()
+
+        self.text.build()
+
+    def build(self):
+        self.__complex_check()
+        self.__build_figures()
+
+        self.builder.prepare_image()
+        self.builder.get_image()
+
+    def build_pre(self):
+        self.__complex_check()
+        self.__build_figures()
+
+    def build_after(self):
+        self.builder.prepare_image()
+        self.builder.get_image()
+
+    def build_local(self):
+        self.__complex_check()
+        self.__build_figures()
+
+        self.builder.prepare_image()
+        figure = self.builder.get_image_local()
+        self.__show_figure(figure)
+
+    def change_scale(self):
+        self.circle.scale = self.scale
+        self.arc.scale = self.scale
+        self.square.scale = self.scale
+        self.perimeter.scale = self.scale
+
+        self.text.scale = self.scale
+
+    def set_default(self):
+
         self.grid = Grid(builder=self.builder,
                          d=self.d, surf_width=self.surf_width, surf_height=self.surf_height)
-
         self.circle = Circle(builder=self.builder, center=self.center,
                              d_width=self.d_width, d_height=self.d_height, scale=self.scale)
         self.arc = Arc(builder=self.builder, center=self.center,
@@ -71,26 +121,18 @@ class Plotter:
                                    circle=self.circle, arc=self.arc, square=self.square, scale=self.scale,
                                    perimeter=self.perimeter)
 
-    def build(self):
-        self.__complex_check()
-        figure = self.__build_figures()
-        self.__show_figure(figure)
-
-    def __build_figures(self):
-        self.grid.build()
-
-        self.circle.build()
-        self.arc.build()
-        self.square.build()
-        self.perimeter.build()
-
-        #self.auxiliary.build()
-
-        return self.builder.get_image()
+        self.text = Text(builder=self.builder, center=self.center,
+                         d_width=self.d_width, d_height=self.d_height,
+                         scale=self.scale,
+                         aux=self.auxiliary)
 
     def __complex_check(self):
         if self.arc.radius <= self.circle.radius:
             raise ValueError(f'Arc.radius <= Circle.radius: {self.arc.radius} <= {self.circle.radius}')
+        if self.square.x_offset <= self.circle.radius:
+            raise ValueError(f'Circle.x_offset <= Circle.radius: {self.square.x_offset} <= {self.circle.radius}')
+        if self.square.y_offset <= self.circle.radius:
+            raise ValueError(f'Circle.y_offset <= Circle.radius: {self.square.y_offset} <= {self.circle.radius}')
 
     def __show_figure(self, data):
         # Basic fig
@@ -110,8 +152,24 @@ class Plotter:
 
 if __name__ == '__main__':
     fig = Plotter()
-    fig.scale = 2
-    fig.setup_builder()
-    fig.setup_figures()
 
-    fig.build()
+    #  fig.builder.projective(x0=1, y0=1, w0=1000,
+    #                         yx=90, yy=800, wy=1,
+    #                         xx=800, xy=50, wx=1)
+
+    #  fig.build_local()
+
+    #  fig.builder.affine(yx=0, yy=1, wy=0,
+    #                     xx=1, xy=1, wx=0)
+
+    fig.build_pre()
+    fig.builder.prepare_image()
+
+    fig.builder.shift_rotate(ox=10, oy=10,
+                             cx=20, cy=20, a=2)
+
+    fig.builder.get_image()
+    fig.build_local()
+
+    fig.build_local()
+
