@@ -123,8 +123,6 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.plotter.if_auxiliary = False
 
-        self.build_figure()
-
     def set_to_default(self):
         self.plotter.set_default()
 
