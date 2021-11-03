@@ -151,14 +151,17 @@ class Window(QMainWindow, Ui_MainWindow):
         self.scale_value.setValue(1)
 
     def transform_handler(self):
-        index = self.tabWidget.currentIndex()
+        try:
+            index = self.tabWidget.currentIndex()
 
-        if index == 0:
-            self.transform_base()
-        elif index == 1:
-            self.transform_affine()
-        elif index == 2:
-            self.transform_projective()
+            if index == 0:
+                self.transform_base()
+            elif index == 1:
+                self.transform_affine()
+            elif index == 2:
+                self.transform_projective()
+        except ZeroDivisionError as e:
+            error_window(e)
 
     def transform_base(self):
         try:
